@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package timesheet_app;
+
+option go_package = "/proto-gen/timesheet";
+
+service TimesheetService {
+  rpc CreateTimesheet(CreateTimesheetRequest) returns (Timesheet);
+}
+
+message Timesheet {
+  string id = 1;
+  string contractor_id = 2;
+  string client_id = 3;
+  string date = 4;
+  string dayOfWeek = 5;
+  string task = 6;
+  string workDetails = 7;
+  float totalHours = 8;
+  float nonBillableHours = 9;
+  float totalWorkHours = 10;
+  float hourlyRate = 11;
+  float pay = 12;
+}
+
+
+message CreateTimesheetRequest {
+  string contractor_id = 1;
+  string client_id = 2;
+  string date = 3;
+  string task = 4;
+  string workDetails = 5;
+  float totalHours = 6;
+}
