@@ -53,7 +53,7 @@ func (s *SheetServer) CreateTimesheet(ctx context.Context, req *pb.CreateTimeshe
 	}
 
 	// Store the timesheet in the in-memory map
-	s.Timesheets[timesheet.Id] = timesheet
+	s.Timesheets = append(s.Timesheets, timesheet)
 
 	return timesheet, nil
 }

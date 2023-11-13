@@ -17,7 +17,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterTimesheetServiceServer(grpcServer, &api.SheetServer{
-		Timesheets: make(map[string]*pb.Timesheet),
+		Timesheets: make([]*pb.Timesheet, 0),
 		IdCounter:  0,
 	})
 
