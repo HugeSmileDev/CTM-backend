@@ -15,7 +15,7 @@ func (s *SheetServer) CreateTimesheet(ctx context.Context, req *pb.CreateTimeshe
 	s.Mu.Lock()
 	defer s.Mu.Unlock()
 
-	fmt.Printf("Create Timesheet request came from \"%s\"\n", req.ClientId)
+	fmt.Printf("Create Timesheet request came from \"%s\"\n", req.GetContractorId())
 
 	// Check if a timesheet with the same details already exists
 	for _, ts := range s.Timesheets {

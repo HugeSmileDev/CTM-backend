@@ -7,6 +7,7 @@ import (
 	pb "time_logger/proto-gen/timesheet"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -19,6 +20,10 @@ func main() {
 		Timesheets: make(map[string]*pb.Timesheet),
 		IdCounter:  0,
 	})
+
+	// Enable Server Reflection
+	reflection.Register(grpcServer)
+
 	log.Printf("server listening at %v", lis.Addr())
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
