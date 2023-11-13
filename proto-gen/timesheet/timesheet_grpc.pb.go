@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TimesheetService_CreateTimesheet_FullMethodName           = "/timesheet_app.TimesheetService/CreateTimesheet"
-	TimesheetService_GetTimesheetsByContractor_FullMethodName = "/timesheet_app.TimesheetService/GetTimesheetsByContractor"
+	TimesheetService_CreateTimesheet_FullMethodName                    = "/timesheet_app.TimesheetService/CreateTimesheet"
+	TimesheetService_GetTimesheetsByContractor_FullMethodName          = "/timesheet_app.TimesheetService/GetTimesheetsByContractor"
+	TimesheetService_GetTimesheetsByContractorAndClient_FullMethodName = "/timesheet_app.TimesheetService/GetTimesheetsByContractorAndClient"
 )
 
 // TimesheetServiceClient is the client API for TimesheetService service.
@@ -28,7 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TimesheetServiceClient interface {
 	CreateTimesheet(ctx context.Context, in *CreateTimesheetRequest, opts ...grpc.CallOption) (*Timesheet, error)
-	GetTimesheetsByContractor(ctx context.Context, in *GetTimesheetsByContractorRequest, opts ...grpc.CallOption) (*GetTimesheetsByContractorResponse, error)
+	GetTimesheetsByContractor(ctx context.Context, in *GetTimesheetsByContractorRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error)
+	GetTimesheetsByContractorAndClient(ctx context.Context, in *GetTimesheetsByContractorAndClientRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error)
 }
 
 type timesheetServiceClient struct {
@@ -48,9 +50,18 @@ func (c *timesheetServiceClient) CreateTimesheet(ctx context.Context, in *Create
 	return out, nil
 }
 
-func (c *timesheetServiceClient) GetTimesheetsByContractor(ctx context.Context, in *GetTimesheetsByContractorRequest, opts ...grpc.CallOption) (*GetTimesheetsByContractorResponse, error) {
-	out := new(GetTimesheetsByContractorResponse)
+func (c *timesheetServiceClient) GetTimesheetsByContractor(ctx context.Context, in *GetTimesheetsByContractorRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error) {
+	out := new(GetTimesheetsResponse)
 	err := c.cc.Invoke(ctx, TimesheetService_GetTimesheetsByContractor_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *timesheetServiceClient) GetTimesheetsByContractorAndClient(ctx context.Context, in *GetTimesheetsByContractorAndClientRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error) {
+	out := new(GetTimesheetsResponse)
+	err := c.cc.Invoke(ctx, TimesheetService_GetTimesheetsByContractorAndClient_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +73,8 @@ func (c *timesheetServiceClient) GetTimesheetsByContractor(ctx context.Context, 
 // for forward compatibility
 type TimesheetServiceServer interface {
 	CreateTimesheet(context.Context, *CreateTimesheetRequest) (*Timesheet, error)
-	GetTimesheetsByContractor(context.Context, *GetTimesheetsByContractorRequest) (*GetTimesheetsByContractorResponse, error)
+	GetTimesheetsByContractor(context.Context, *GetTimesheetsByContractorRequest) (*GetTimesheetsResponse, error)
+	GetTimesheetsByContractorAndClient(context.Context, *GetTimesheetsByContractorAndClientRequest) (*GetTimesheetsResponse, error)
 	mustEmbedUnimplementedTimesheetServiceServer()
 }
 
@@ -73,8 +85,11 @@ type UnimplementedTimesheetServiceServer struct {
 func (UnimplementedTimesheetServiceServer) CreateTimesheet(context.Context, *CreateTimesheetRequest) (*Timesheet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTimesheet not implemented")
 }
-func (UnimplementedTimesheetServiceServer) GetTimesheetsByContractor(context.Context, *GetTimesheetsByContractorRequest) (*GetTimesheetsByContractorResponse, error) {
+func (UnimplementedTimesheetServiceServer) GetTimesheetsByContractor(context.Context, *GetTimesheetsByContractorRequest) (*GetTimesheetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTimesheetsByContractor not implemented")
+}
+func (UnimplementedTimesheetServiceServer) GetTimesheetsByContractorAndClient(context.Context, *GetTimesheetsByContractorAndClientRequest) (*GetTimesheetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTimesheetsByContractorAndClient not implemented")
 }
 func (UnimplementedTimesheetServiceServer) mustEmbedUnimplementedTimesheetServiceServer() {}
 
@@ -125,6 +140,24 @@ func _TimesheetService_GetTimesheetsByContractor_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TimesheetService_GetTimesheetsByContractorAndClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTimesheetsByContractorAndClientRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TimesheetServiceServer).GetTimesheetsByContractorAndClient(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TimesheetService_GetTimesheetsByContractorAndClient_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TimesheetServiceServer).GetTimesheetsByContractorAndClient(ctx, req.(*GetTimesheetsByContractorAndClientRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TimesheetService_ServiceDesc is the grpc.ServiceDesc for TimesheetService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var TimesheetService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTimesheetsByContractor",
 			Handler:    _TimesheetService_GetTimesheetsByContractor_Handler,
+		},
+		{
+			MethodName: "GetTimesheetsByContractorAndClient",
+			Handler:    _TimesheetService_GetTimesheetsByContractorAndClient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

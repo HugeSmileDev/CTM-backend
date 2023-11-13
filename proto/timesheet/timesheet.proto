@@ -6,7 +6,8 @@ option go_package = "/proto-gen/timesheet";
 
 service TimesheetService {
   rpc CreateTimesheet(CreateTimesheetRequest) returns (Timesheet);
-  rpc GetTimesheetsByContractor(GetTimesheetsByContractorRequest) returns (GetTimesheetsByContractorResponse);
+  rpc GetTimesheetsByContractor(GetTimesheetsByContractorRequest) returns (GetTimesheetsResponse);
+  rpc GetTimesheetsByContractorAndClient(GetTimesheetsByContractorAndClientRequest) returns (GetTimesheetsResponse);
 }
 
 message Timesheet {
@@ -38,6 +39,11 @@ message GetTimesheetsByContractorRequest {
   string contractor_id = 1;
 }
 
-message GetTimesheetsByContractorResponse {
+message GetTimesheetsByContractorAndClientRequest {
+  string contractor_id = 1;
+  string client_id = 2;
+}
+
+message GetTimesheetsResponse {
   repeated Timesheet timesheets = 1;
 }
