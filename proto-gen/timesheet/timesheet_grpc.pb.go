@@ -22,6 +22,8 @@ const (
 	TimesheetService_CreateTimesheet_FullMethodName                    = "/timesheet_app.TimesheetService/CreateTimesheet"
 	TimesheetService_GetTimesheetsByContractor_FullMethodName          = "/timesheet_app.TimesheetService/GetTimesheetsByContractor"
 	TimesheetService_GetTimesheetsByContractorAndClient_FullMethodName = "/timesheet_app.TimesheetService/GetTimesheetsByContractorAndClient"
+	TimesheetService_UpdateTimesheet_FullMethodName                    = "/timesheet_app.TimesheetService/UpdateTimesheet"
+	TimesheetService_DeleteTimesheet_FullMethodName                    = "/timesheet_app.TimesheetService/DeleteTimesheet"
 )
 
 // TimesheetServiceClient is the client API for TimesheetService service.
@@ -31,6 +33,8 @@ type TimesheetServiceClient interface {
 	CreateTimesheet(ctx context.Context, in *CreateTimesheetRequest, opts ...grpc.CallOption) (*Timesheet, error)
 	GetTimesheetsByContractor(ctx context.Context, in *GetTimesheetsByContractorRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error)
 	GetTimesheetsByContractorAndClient(ctx context.Context, in *GetTimesheetsByContractorAndClientRequest, opts ...grpc.CallOption) (*GetTimesheetsResponse, error)
+	UpdateTimesheet(ctx context.Context, in *UpdateTimesheetRequest, opts ...grpc.CallOption) (*Timesheet, error)
+	DeleteTimesheet(ctx context.Context, in *DeleteTimesheetRequest, opts ...grpc.CallOption) (*DeleteTimesheetResponse, error)
 }
 
 type timesheetServiceClient struct {
@@ -68,6 +72,24 @@ func (c *timesheetServiceClient) GetTimesheetsByContractorAndClient(ctx context.
 	return out, nil
 }
 
+func (c *timesheetServiceClient) UpdateTimesheet(ctx context.Context, in *UpdateTimesheetRequest, opts ...grpc.CallOption) (*Timesheet, error) {
+	out := new(Timesheet)
+	err := c.cc.Invoke(ctx, TimesheetService_UpdateTimesheet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *timesheetServiceClient) DeleteTimesheet(ctx context.Context, in *DeleteTimesheetRequest, opts ...grpc.CallOption) (*DeleteTimesheetResponse, error) {
+	out := new(DeleteTimesheetResponse)
+	err := c.cc.Invoke(ctx, TimesheetService_DeleteTimesheet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TimesheetServiceServer is the server API for TimesheetService service.
 // All implementations must embed UnimplementedTimesheetServiceServer
 // for forward compatibility
@@ -75,6 +97,8 @@ type TimesheetServiceServer interface {
 	CreateTimesheet(context.Context, *CreateTimesheetRequest) (*Timesheet, error)
 	GetTimesheetsByContractor(context.Context, *GetTimesheetsByContractorRequest) (*GetTimesheetsResponse, error)
 	GetTimesheetsByContractorAndClient(context.Context, *GetTimesheetsByContractorAndClientRequest) (*GetTimesheetsResponse, error)
+	UpdateTimesheet(context.Context, *UpdateTimesheetRequest) (*Timesheet, error)
+	DeleteTimesheet(context.Context, *DeleteTimesheetRequest) (*DeleteTimesheetResponse, error)
 	mustEmbedUnimplementedTimesheetServiceServer()
 }
 
@@ -90,6 +114,12 @@ func (UnimplementedTimesheetServiceServer) GetTimesheetsByContractor(context.Con
 }
 func (UnimplementedTimesheetServiceServer) GetTimesheetsByContractorAndClient(context.Context, *GetTimesheetsByContractorAndClientRequest) (*GetTimesheetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTimesheetsByContractorAndClient not implemented")
+}
+func (UnimplementedTimesheetServiceServer) UpdateTimesheet(context.Context, *UpdateTimesheetRequest) (*Timesheet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTimesheet not implemented")
+}
+func (UnimplementedTimesheetServiceServer) DeleteTimesheet(context.Context, *DeleteTimesheetRequest) (*DeleteTimesheetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTimesheet not implemented")
 }
 func (UnimplementedTimesheetServiceServer) mustEmbedUnimplementedTimesheetServiceServer() {}
 
@@ -158,6 +188,42 @@ func _TimesheetService_GetTimesheetsByContractorAndClient_Handler(srv interface{
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TimesheetService_UpdateTimesheet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTimesheetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TimesheetServiceServer).UpdateTimesheet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TimesheetService_UpdateTimesheet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TimesheetServiceServer).UpdateTimesheet(ctx, req.(*UpdateTimesheetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TimesheetService_DeleteTimesheet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTimesheetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TimesheetServiceServer).DeleteTimesheet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TimesheetService_DeleteTimesheet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TimesheetServiceServer).DeleteTimesheet(ctx, req.(*DeleteTimesheetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TimesheetService_ServiceDesc is the grpc.ServiceDesc for TimesheetService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +242,14 @@ var TimesheetService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTimesheetsByContractorAndClient",
 			Handler:    _TimesheetService_GetTimesheetsByContractorAndClient_Handler,
+		},
+		{
+			MethodName: "UpdateTimesheet",
+			Handler:    _TimesheetService_UpdateTimesheet_Handler,
+		},
+		{
+			MethodName: "DeleteTimesheet",
+			Handler:    _TimesheetService_DeleteTimesheet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

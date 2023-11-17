@@ -8,6 +8,8 @@ service TimesheetService {
   rpc CreateTimesheet(CreateTimesheetRequest) returns (Timesheet);
   rpc GetTimesheetsByContractor(GetTimesheetsByContractorRequest) returns (GetTimesheetsResponse);
   rpc GetTimesheetsByContractorAndClient(GetTimesheetsByContractorAndClientRequest) returns (GetTimesheetsResponse);
+  rpc UpdateTimesheet(UpdateTimesheetRequest) returns (Timesheet);
+  rpc DeleteTimesheet(DeleteTimesheetRequest) returns (DeleteTimesheetResponse);
 }
 
 message Timesheet {
@@ -46,4 +48,16 @@ message GetTimesheetsByContractorAndClientRequest {
 
 message GetTimesheetsResponse {
   repeated Timesheet timesheets = 1;
+}
+
+message UpdateTimesheetRequest {
+  Timesheet timesheet = 1;
+}
+
+message DeleteTimesheetRequest {
+  string id = 1;
+}
+
+message DeleteTimesheetResponse {
+  bool success = 1;
 }
